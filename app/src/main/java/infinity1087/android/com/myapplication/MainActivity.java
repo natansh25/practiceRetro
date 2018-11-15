@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -47,7 +48,12 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Example> call, Response<Example> response) {
                 List<Result> results = response.body().getResults();
 
-                mAdapter = new NameAdapter(results);
+                mAdapter = new NameAdapter(results, new NameAdapter.ListItemClickListner() {
+                    @Override
+                    public void onListItemClick(Result movieResults) {
+                        Toast.makeText(MainActivity.this, movieResults.getTitle(), Toast.LENGTH_SHORT).show();
+                    }
+                });
                 mRecyclerView.setAdapter(mAdapter);
 
 
@@ -56,8 +62,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
 
+
+
             }
         });
 
     }
+
+
 }

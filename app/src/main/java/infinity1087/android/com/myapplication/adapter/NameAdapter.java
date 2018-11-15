@@ -16,9 +16,15 @@ import infinity1087.android.com.myapplication.model.Result;
 public class NameAdapter extends RecyclerView.Adapter<NameAdapter.MyViewHolder> {
 
     List<Result> movie;
+    final private ListItemClickListner mOnClickListener;
 
-    public NameAdapter(List<Result> movie) {
+    public interface ListItemClickListner {
+        void onListItemClick(Result movieResults);
+    }
+
+    public NameAdapter(List<Result> movie, ListItemClickListner onClickListener) {
         this.movie = movie;
+        mOnClickListener = onClickListener;
     }
 
     @NonNull
@@ -45,13 +51,24 @@ public class NameAdapter extends RecyclerView.Adapter<NameAdapter.MyViewHolder> 
     }
 
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView txt_item_name;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_item_name = itemView.findViewById(R.id.txt_name);
+            itemView.setOnClickListener(this);
+
+
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            int adapterPos = getAdapterPosition();
+            Result res = movie.get(adapterPos);
+            mOnClickListener.onListItemClick(res);
 
 
         }
