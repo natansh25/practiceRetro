@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NameAdapter.ListItemClickListner {
 
 
     private RecyclerView mRecyclerView;
@@ -52,27 +52,37 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        callingRetrofit();
+
+
+        // callingRetrofit();
 
     }
 
     private void setUpRecyclerView(List<Result> results) {
 
 
-        mAdapter = new NameAdapter(results, new NameAdapter.ListItemClickListner() {
-            @Override
-            public void onListItemClick(Result movieResults) {
-
-                Toast.makeText(MainActivity.this, movieResults.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        mAdapter = new NameAdapter(this, results);
+        mAdapter.setOnItemClickListner(this);
         mRecyclerView.setAdapter(mAdapter);
 
 
     }
 
+    @Override
+    public void onListItemClick(Result movieResults) {
 
-    private void callingRetrofit() {
+        Toast.makeText(this, movieResults.getTitle(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onButtonClick(int position) {
+
+        Toast.makeText(this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    /*private void callingRetrofit() {
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
 
@@ -84,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Example> call, Response<Example> response) {
                 List<Result> results = response.body().getResults();
 
-                mAdapter = new NameAdapter(results, new NameAdapter.ListItemClickListner() {
+                mAdapter = new NameAdapter(this,results, new NameAdapter.ListItemClickListner() {
                     @Override
                     public void onListItemClick(Result movieResults) {
                         Toast.makeText(MainActivity.this, movieResults.getTitle(), Toast.LENGTH_SHORT).show();
@@ -102,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }*/
 
 
 }

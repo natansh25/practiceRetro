@@ -1,11 +1,15 @@
 package infinity1087.android.com.myapplication.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -16,15 +20,22 @@ import infinity1087.android.com.myapplication.model.Result;
 public class NameAdapter extends RecyclerView.Adapter<NameAdapter.MyViewHolder> {
 
     List<Result> movie;
-    final private ListItemClickListner mOnClickListener;
+    private ListItemClickListner mOnClickListener;
+    Context mContext;
 
     public interface ListItemClickListner {
         void onListItemClick(Result movieResults);
+        void onButtonClick(int position);
     }
 
-    public NameAdapter(List<Result> movie, ListItemClickListner onClickListener) {
+    public void setOnItemClickListner(ListItemClickListner onClickListener)
+    {
+        this.mOnClickListener=onClickListener;
+    }
+
+    public NameAdapter(Context context,List<Result> movie) {
         this.movie = movie;
-        mOnClickListener = onClickListener;
+        this.mContext=context;
     }
 
     @NonNull
@@ -55,10 +66,14 @@ public class NameAdapter extends RecyclerView.Adapter<NameAdapter.MyViewHolder> 
 
         private TextView txt_item_name;
 
+        private Button btn;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_item_name = itemView.findViewById(R.id.txt_name);
-            itemView.setOnClickListener(this);
+            btn=itemView.findViewById(R.id.button);
+            txt_item_name.setOnClickListener(this);
+            btn.setOnClickListener(this);
 
 
         }
@@ -66,9 +81,21 @@ public class NameAdapter extends RecyclerView.Adapter<NameAdapter.MyViewHolder> 
         @Override
         public void onClick(View view) {
 
-            int adapterPos = getAdapterPosition();
-            Result res = movie.get(adapterPos);
-            mOnClickListener.onListItemClick(res);
+            if (view==txt_item_name)
+            {
+                int adapterPos = getAdapterPosition();
+                Result res = movie.get(adapterPos);
+                mOnClickListener.onListItemClick(res);
+            }
+            if (view==btn)
+            {
+                Toast.makeText(mContext, "Button pressed", Toast.LENGTH_SHORT).show();
+                mOnClickListener.onButtonClick(getAdapterPosition());
+
+
+            }
+
+
 
 
         }
